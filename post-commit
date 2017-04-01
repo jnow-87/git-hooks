@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# source mantis issue tracker functions
+source $(dirname $0)/mantis
+
+
+####
+## helper functions
+####
+
+function on_error(){
+	perror "revert commit due to post-commit error"
+	git reset --soft HEAD^
+	echo ""
+	exit 1
+}
+
+
+
+####
+## main
+####
+
+# get commit message
+msg=$(git log -1 --format=tformat:'%s\n%b')
+
+# get data that shall be stored to the issue tracker database
+# current values:
+#	commit hash
+#	author mail
+#	date
+data=$(git log -1 --date=format:'%Y-%m-%d %k:%M' --format=tformat:'%h %ae %ad')
+
+# update mantis database
+mantis_update_db "${msg}" "${data}"
+
+[ $? -eq 0 ] || on_error
+
+echo ""
+exit 0
