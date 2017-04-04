@@ -1,40 +1,33 @@
 #!/bin/bash
 
+# source helper
+source $(dirname $0)/util_print
+
 # source mantis issue tracker functions
 source $(dirname $0)/mantis
-
-
-####
-## helper functions
-####
-
-function on_error(){
-	perror "revert commit due to post-commit error"
-	git reset --soft HEAD^
-	echo ""
-	exit 1
-}
-
-
 
 ####
 ## main
 ####
 
+echo -e "checking commit message for issue tracker entries"
+
+# get mantis config variables
+mantis_check_config
+
 # get commit message
 msg=$(git log -1 --format=tformat:'%s\n%b')
 
-# get data that shall be stored to the issue tracker database
-# current values:
-#	commit hash
-#	author mail
-#	date
-data=$(git log -1 --date=format:'%Y-%m-%d %k:%M' --format=tformat:'%h %ae %ad')
+# get issue ids from commit message
+issue_ids=$(mantis_check_commit "${msg}")
 
-# update mantis database
-mantis_update_db "${msg}" "${data}"
+# check
+if [ "${require_tag}" == "1" -a -z "${issue_ids}" ];then
+	# no issue in commit message while one is expected
+	perror "commit message does not contain an issue tracker reference"
+	perror "reverting commit"
+	git reset --soft HEAD^
+	exit 1
+fi
 
-[ $? -eq 0 ] || on_error
-
-echo ""
 exit 0
