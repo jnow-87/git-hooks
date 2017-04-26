@@ -121,7 +121,9 @@ do
 	fi
 
 	# check if all data match the database configuration
-	mantis_check_db ${issue_ids}; [ $? -eq 0 ] && exit 1
+	if [ ${has_cfg} -eq 1 ];then
+		mantis_check_db ${issue_ids}; [ $? -eq 0 ] && exit 1
+	fi
 
 	let i=$i+1
 done
@@ -131,6 +133,11 @@ i=1
 
 while [ $i -lt ${#commits[*]} ]
 do
+	# do nothing if no config available
+	if [ ! ${has_cfg} -eq 1 ];then
+		continue
+	fi
+
 	# get commit message
 	msg=$(git log -1 --format=tformat:'%s\n%b' ${commits[$i]})
 
