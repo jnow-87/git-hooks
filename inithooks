@@ -2,17 +2,15 @@
 
 
 function create(){
-	src=$(dirname $0)
-
 	for dir in $(\ls)
 	do
 		[ ! -d ${dir} ] && continue
 
 		echo "updating ${dir}"
-		ln -frs ${src}/style ${dir}/hooks/style
-		ln -frs ${src}/update ${dir}/hooks/update
-		ln -frs ${src}/util_print ${dir}/hooks/util_print
-		ln -frs ${src}/mantis ${dir}/hooks/mantis
+		ln -frs .githooks/style ${dir}/hooks/style
+		ln -frs .githooks/update ${dir}/hooks/update
+		ln -frs .githooks/util_print ${dir}/hooks/util_print
+		ln -frs .githooks/mantis ${dir}/hooks/mantis
 	done
 }
 
