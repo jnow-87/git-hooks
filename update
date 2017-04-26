@@ -148,6 +148,11 @@ do
 	#	date
 	data=$(git log -1 --date=format:'%Y-%m-%d %k:%M' --format=tformat:'%H %ae %ad' ${commits[$i]})
 
+	# try different date format on error
+	if [ ! $? -eq 0 ];then
+		data=$(git log -1 --date=iso --format=tformat:'%H %ae %ad' ${commits[$i]})
+	fi
+
 	# get issue ids from commit message
 	issue_ids=$(mantis_check_commit "${msg}")
 
