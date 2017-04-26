@@ -2,11 +2,15 @@
 
 
 function create(){
+	src=$(dirname $0)
+
 	for dir in $(\ls)
 	do
+		[ ! -d ${dir} ] && continue
+
 		echo "updating ${dir}"
-		ln -frs .githooks/style ${dir}/hooks/style
-		ln -frs .githooks/update ${dir}/hooks/update
+		ln -frs ${src}/style ${dir}/hooks/style
+		ln -frs ${src}/update ${dir}/hooks/update
 	done
 }
 
@@ -15,7 +19,7 @@ function check(){
 
 	for dir in $(\ls)
 	do
-		[ ! -d ${dir} ] && 	continue
+		[ ! -d ${dir} ] && continue
 
 		failed=0
 		test -e ${dir}/hooks/style || failed=1
