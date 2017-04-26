@@ -11,6 +11,8 @@ function create(){
 		echo "updating ${dir}"
 		ln -frs ${src}/style ${dir}/hooks/style
 		ln -frs ${src}/update ${dir}/hooks/update
+		ln -frs ${src}/util_print ${dir}/hooks/util_print
+		ln -frs ${src}/mantis ${dir}/hooks/mantis
 	done
 }
 
@@ -24,6 +26,8 @@ function check(){
 		failed=0
 		test -e ${dir}/hooks/style || failed=1
 		test -e ${dir}/hooks/update || failed=1
+		test -e ${dir}/hooks/util_print || failed=1
+		test -e ${dir}/hooks/mantis || failed=1
 
 		if [ ${failed} -eq 0 ];then
 			echo -e "${dir} \033[32mok\033[0m"
