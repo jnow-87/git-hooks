@@ -135,6 +135,7 @@ while [ $i -lt ${#commits[*]} ]
 do
 	# do nothing if no config available
 	if [ ! ${has_cfg} -eq 1 ];then
+		let i=$i+1
 		continue
 	fi
 
